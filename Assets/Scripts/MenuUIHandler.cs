@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
+using UnityEngine.UI;
+using System;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -12,16 +16,32 @@ using UnityEditor;
 
 public class MenuUIHandler : MonoBehaviour
 {
+    // text field for player name
+    public InputField playerName;
+
+    public void NameEntered(string name)
+    {
+        Player.Instance.playerName = name;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        if (playerName != null)
+        {
+            playerName.onValueChanged.AddListener(delegate { NameEntered(playerName.text); });
+        }
+        else
+        {
+            Player.Instance.playerName = "";
+        }
+
         
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+
     }
 
     /*
@@ -31,6 +51,7 @@ public class MenuUIHandler : MonoBehaviour
      */
     public void StartNew()
     {
+        //NameEntered(playerName.text);
         SceneManager.LoadScene(1);
     }
 
@@ -47,4 +68,7 @@ public class MenuUIHandler : MonoBehaviour
         Application.Quit();
 #endif 
     }
+
+
+
 }
