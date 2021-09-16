@@ -19,6 +19,14 @@ public class MenuUIHandler : MonoBehaviour
     // text field for player name
     public InputField playerName;
 
+    /*
+     * NameEntered
+     * 
+     * Parameters:
+     *  - name: player name entered
+     *  
+     *  Sets the players name for this instance
+     */
     public void NameEntered(string name)
     {
         Player.Instance.playerName = name;
@@ -27,10 +35,12 @@ public class MenuUIHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // if the player name is not empty, call NameEntered
         if (playerName != null)
         {
             playerName.onValueChanged.AddListener(delegate { NameEntered(playerName.text); });
         }
+        // else leave the name blank
         else
         {
             Player.Instance.playerName = "";

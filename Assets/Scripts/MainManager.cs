@@ -45,6 +45,16 @@ public class MainManager : MonoBehaviour
         
     }
 
+    /*
+     * SetName
+     * 
+     * Parameters: 
+     *  - string: name of the player
+     *  
+     *  Sets the best score text
+     *  
+     *  IMPORTANT: not currently in use
+     */
     void SetName(string name)
     {
         BestScoreText.text += name;
@@ -54,6 +64,7 @@ public class MainManager : MonoBehaviour
     {
         if (!m_Started)
         {
+            // when space is pressed, start the game
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 m_Started = true;
@@ -67,10 +78,12 @@ public class MainManager : MonoBehaviour
         }
         else if (m_GameOver)
         {
+            // if game over and space is pressed again, start the game again
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
+            // else if game over and q is pressed, quit
             else if (Input.GetKeyDown(KeyCode.Q))
             {
                 SceneManager.LoadScene(0);
@@ -78,12 +91,25 @@ public class MainManager : MonoBehaviour
         }
     }
 
+    /*
+     * AddPoint
+     * 
+     * Parameters:
+     *  - point: integer representing point earned
+     *  
+     *  Adds points earned to total points
+     */
     void AddPoint(int point)
     {
         m_Points += point;
         ScoreText.text = $"Score : {m_Points}";
     }
 
+    /*
+     * GameOver
+     * 
+     * ends game and activates game over text
+     */
     public void GameOver()
     {
         m_GameOver = true;
