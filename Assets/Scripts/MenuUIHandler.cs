@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using System;
+using System.IO;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -16,8 +17,10 @@ using UnityEditor;
 
 public class MenuUIHandler : MonoBehaviour
 {
-    // text field for player name
+    // input field for player name
     public InputField playerName;
+    public GameObject recentScore; // recent score text field
+    public GameObject highScore; // high score text field
 
     /*
      * NameEntered
@@ -35,23 +38,35 @@ public class MenuUIHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // if the player name is not empty, call NameEntered
-        if (playerName != null)
+        // add listener to text field
+        playerName.onValueChanged.AddListener(delegate { NameEntered(playerName.text); });
+        // if player name text field is left empty,
+        // change it to default
+        if (playerName.text == "")
         {
-            playerName.onValueChanged.AddListener(delegate { NameEntered(playerName.text); });
+            Player.Instance.playerName = "[no name]";
         }
-        // else leave the name blank
-        else
-        {
-            Player.Instance.playerName = "";
-        }
-
         
     }
 
-    private void Update()
+    /*
+     * Awake
+     * 
+     * Updates the recent score and high score text fields when scene awakens
+     */
+    private void Awake()
     {
+        // if a recent game data exists, fill text field
+        if (Player.Instance.recentPlayer != "")
+        {
+            recentScore.GetComponent<Text>().text = $"{Player.Instance.recentPlayer}: {Player.Instance.recentScore}";
+        }
 
+        // if high score exists, fill text field
+        if (Player.Instance.highScore > 0)
+        {
+            highScore.GetComponent<Text>().text = $"{Player.Instance.topPlayer}: {Player.Instance.highScore}";
+        }
     }
 
     /*
@@ -61,8 +76,43 @@ public class MenuUIHandler : MonoBehaviour
      */
     public void StartNew()
     {
-        //NameEntered(playerName.text);
         SceneManager.LoadScene(1);
+    }
+
+    /*
+     * ResetScores
+     * 
+     * Resets the recent and high scores when reset button is pressed
+     */
+    public void ResetScores()
+    {
+        string path = Application.persistentDataPath + "/savefile.json"; // file path
+
+        // if file path exists
+        if (File.Exists(path))
+        {
+            File.Delete(path); // delete path
+
+            // call the refresh editor function
+            RefreshEditor();
+
+            // erase the player instance of all data
+            Player.Instance.TotalReset();
+            // refresh the scene
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+    }
+
+    /*
+     *  RefreshEditor
+     *  
+     *  if using the unity editor to play, refresh its database
+     */
+    void RefreshEditor()
+    {
+#if UNITY_EDITOR
+        UnityEditor.AssetDatabase.Refresh();
+#endif
     }
 
     /*
@@ -78,7 +128,6 @@ public class MenuUIHandler : MonoBehaviour
         Application.Quit();
 #endif 
     }
-
 
 
 }
