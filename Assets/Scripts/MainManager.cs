@@ -16,6 +16,7 @@ public class MainManager : MonoBehaviour
     public Text ScoreText;
     public Text BestScoreText;
     public GameObject GameOverText;
+
     
     private bool m_Started = false;
     private int m_Points;
@@ -51,6 +52,7 @@ public class MainManager : MonoBehaviour
 
         // set best score text line
         UpdateHighScore(Player.Instance.topPlayer, Player.Instance.highScore);
+        
     }
 
     /*
@@ -86,6 +88,10 @@ public class MainManager : MonoBehaviour
         }
         else if (m_GameOver)
         {
+            GameOverText.SetActive(true);
+            ScoreText.enabled = false;
+            BestScoreText.enabled = false;
+            
             Player.Instance.score = m_Points; // saves the final score to the player instance
             Player.Instance.SavePlayerData(); // saves the most recent player
             Player.Instance.LoadPlayerData();

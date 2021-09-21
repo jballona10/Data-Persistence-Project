@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
     public string recentPlayer;
     // high score player data
     public float highScore;
-    public string topPlayer;
+    public string topPlayer; 
 
     private void Awake()
     {
@@ -52,6 +52,7 @@ public class Player : MonoBehaviour
         highScore = 0;
     }
 
+
     /*
      * SaveData class
      * 
@@ -81,6 +82,8 @@ public class Player : MonoBehaviour
         // create an instance of save data
         // and insert most recent player's name and score
         SaveData data = new SaveData();
+
+
         data.PlayerName = playerName;
         data.Score = score;
 
@@ -89,13 +92,12 @@ public class Player : MonoBehaviour
         if (score > highScore)
         {
             data.topPlayer = playerName;
-            data.topScore = score;
+            data.topScore = score;          
         }
         else // otherwise, keep the same data
         {
             data.topPlayer = Player.Instance.topPlayer;
             data.topScore = Player.Instance.highScore;
-
         }
 
         string json = JsonUtility.ToJson(data); // change data to JSON 
